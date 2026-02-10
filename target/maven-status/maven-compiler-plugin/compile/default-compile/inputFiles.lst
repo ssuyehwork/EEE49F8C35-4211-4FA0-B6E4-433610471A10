@@ -1,0 +1,9 @@
+/app/src/main/java/com/smartbrowser/utils/JsonUtils.java
+/app/src/main/java/com/smartbrowser/utils/Logger.java
+/app/src/main/java/com/smartbrowser/bookmark/model/Bookmark.java
+/app/src/main/java/com/smartbrowser/history/HistoryEntry.java
+/app/src/main/java/com/smartbrowser/bookmark/model/BookmarkFolder.java
+/app/src/main/java/com/smartbrowser/bookmark/model/BookmarkTag.java
+/app/src/main/java/com/smartbrowser/utils/FileUtils.java
+/app/src/main/java/com/smartbrowser/utils/URLUtils.java
+/app/src/main/java/com/smartbrowser/download/DownloadTask.java

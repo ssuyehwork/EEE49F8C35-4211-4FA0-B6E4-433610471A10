@@ -1,0 +1,10 @@
+com/smartbrowser/utils/JsonUtils.class
+com/smartbrowser/download/DownloadTask$DownloadStatus.class
+com/smartbrowser/bookmark/model/BookmarkFolder.class
+com/smartbrowser/utils/URLUtils.class
+com/smartbrowser/history/HistoryEntry.class
+com/smartbrowser/bookmark/model/Bookmark.class
+com/smartbrowser/download/DownloadTask.class
+com/smartbrowser/utils/FileUtils.class
+com/smartbrowser/bookmark/model/BookmarkTag.class
+com/smartbrowser/utils/Logger.class
