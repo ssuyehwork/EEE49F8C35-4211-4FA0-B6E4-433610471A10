@@ -10,7 +10,7 @@ public class URLUtilsTest {
         assertTrue(URLUtils.isValidURL("http://www.google.com"));
         assertTrue(URLUtils.isValidURL("https://github.com/test?a=1&b=2"));
         assertFalse(URLUtils.isValidURL("not a url"));
-        assertFalse(URLUtils.isValidURL("www.google.com")); // 缺少协议
+        assertFalse(URLUtils.isValidURL("www.google.com")); // \u7f3a\u5c11\u534f\u8bae
     }
 
     @Test

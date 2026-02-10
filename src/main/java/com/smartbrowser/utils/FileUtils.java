@@ -5,12 +5,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * 文件操作工具类
+ * \u6587\u4ef6\u64cd\u4f5c\u5de5\u5177\u7c7b
  */
 public class FileUtils {
 
     /**
-     * 确保目录存在
+     * \u786e\u4fdd\u76ee\u5f55\u5b58\u5728
      */
     public static void ensureDirectoryExists(String path) {
         File dir = new File(path);
@@ -20,35 +20,35 @@ public class FileUtils {
     }
 
     /**
-     * 读取文本文件
+     * \u8bfb\u53d6\u6587\u672c\u6587\u4ef6
      */
     public static String readTextFile(String path) throws IOException {
         return org.apache.commons.io.FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
     }
 
     /**
-     * 写入文本文件
+     * \u5199\u5165\u6587\u672c\u6587\u4ef6
      */
     public static void writeTextFile(String path, String content) throws IOException {
         org.apache.commons.io.FileUtils.writeStringToFile(new File(path), content, StandardCharsets.UTF_8);
     }
 
     /**
-     * 复制文件
+     * \u590d\u5236\u6587\u4ef6
      */
     public static void copyFile(String source, String dest) throws IOException {
         org.apache.commons.io.FileUtils.copyFile(new File(source), new File(dest));
     }
 
     /**
-     * 删除文件
+     * \u5220\u9664\u6587\u4ef6
      */
     public static boolean deleteFile(String path) {
         return new File(path).delete();
     }
 
     /**
-     * 获取用户数据目录路径
+     * \u83b7\u53d6\u7528\u6237\u6570\u636e\u76ee\u5f55\u8def\u5f84
      */
     public static String getUserDataDir() {
         return "data" + File.separator;

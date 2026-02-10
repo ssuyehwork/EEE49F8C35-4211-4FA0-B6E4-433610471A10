@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 
 /**
- * 导航栏组件，包含后退、前进、刷新、停止、主页按钮
+ * \u5bfc\u822a\u680f\u7ec4\u4ef6\uff0c\u5305\u542b\u540e\u9000\u3001\u524d\u8fdb\u3001\u5237\u65b0\u3001\u505c\u6b62\u3001\u4e3b\u9875\u6309\u94ae
  */
 public class NavigationBar extends HBox {
     private final Button backBtn;
@@ -21,11 +21,11 @@ public class NavigationBar extends HBox {
         this.setPadding(new javafx.geometry.Insets(5));
         this.setMinHeight(40);
 
-        backBtn = createButton("back.svg", "后退");
-        forwardBtn = createButton("forward.svg", "前进");
-        refreshBtn = createButton("refresh.svg", "刷新");
-        stopBtn = new Button("×"); // 暂时用文本
-        homeBtn = new Button("🏠"); // 暂时用文本
+        backBtn = createButton("back.svg", "\u540e\u9000");
+        forwardBtn = createButton("forward.svg", "\u524d\u8fdb");
+        refreshBtn = createButton("refresh.svg", "\u5237\u65b0");
+        stopBtn = new Button("\u00d7"); // \u6682\u65f6\u7528\u6587\u672c
+        homeBtn = new Button("\u1f3e0"); // \u6682\u65f6\u7528\u6587\u672c
 
         initActions();
         this.getChildren().addAll(backBtn, forwardBtn, refreshBtn, stopBtn, homeBtn);
@@ -37,7 +37,7 @@ public class NavigationBar extends HBox {
         if (iconView.getImage() != null) {
             btn.setGraphic(iconView);
         } else {
-            // 如果图标加载失败（如 SVG 不支持），使用文字
+            // \u5982\u679c\u56fe\u6807\u52a0\u8f7d\u5931\u8d25\uff08\u5982 SVG \u4e0d\u652f\u6301\uff09\uff0c\u4f7f\u7528\u6587\u5b57
             btn.setText(tooltip);
         }
         return btn;
@@ -51,7 +51,7 @@ public class NavigationBar extends HBox {
         stopBtn.setOnAction(e -> nav.stopLoading());
         homeBtn.setOnAction(e -> nav.goHome());
 
-        // 初始禁用状态
+        // \u521d\u59cb\u7981\u7528\u72b6\u6001
         updateButtonStates();
     }
 

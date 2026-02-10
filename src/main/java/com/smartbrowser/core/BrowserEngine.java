@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 浏览器引擎封装类，管理 WebView 和 WebEngine
+ * \u6d4f\u89c8\u5668\u5f15\u64ce\u5c01\u88c5\u7c7b\uff0c\u7ba1\u7406 WebView \u548c WebEngine
  */
 public class BrowserEngine {
     private final WebView webView;
     private final WebEngine webEngine;
 
-    // 事件监听器列表
+    // \u4e8b\u4ef6\u76d1\u542c\u5668\u5217\u8868
     private final List<OnLoadProgressListener> progressListeners = new ArrayList<>();
     private final List<OnURLChangeListener> urlListeners = new ArrayList<>();
     private final List<OnTitleChangeListener> titleListeners = new ArrayList<>();
@@ -22,14 +22,14 @@ public class BrowserEngine {
     public BrowserEngine() {
         this.webView = new WebView();
         this.webEngine = webView.getEngine();
-        // 设置默认编码为 UTF-8
+        // \u8bbe\u7f6e\u9ed8\u8ba4\u7f16\u7801\u4e3a UTF-8
         this.webEngine.setUserStyleSheetLocation(null);
         this.webEngine.setUserDataDirectory(new java.io.File(System.getProperty("user.home"), ".smartbrowser/webview"));
         initListeners();
     }
 
     private void initListeners() {
-        // 监听加载进度
+        // \u76d1\u542c\u52a0\u8f7d\u8fdb\u5ea6
         webEngine.getLoadWorker().progressProperty().addListener((obs, old, progress) -> {
             double p = progress.doubleValue();
             for (OnLoadProgressListener listener : progressListeners) {
@@ -37,11 +37,11 @@ public class BrowserEngine {
             }
         });
 
-        // 监听加载状态
+        // \u76d1\u542c\u52a0\u8f7d\u72b6\u6001
         webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
-                Logger.info("页面加载成功: " + webEngine.getLocation());
-                // 注入 CSS 修复潜在的字体渲染/编码乱码视觉问题
+                Logger.info("\u9875\u9762\u52a0\u8f7d\u6210\u529f: " + webEngine.getLocation());
+                // \u6ce8\u5165 CSS \u4fee\u590d\u6f5c\u5728\u7684\u5b57\u4f53\u6e32\u67d3/\u7f16\u7801\u4e71\u7801\u89c6\u89c9\u95ee\u9898
                 executeScript("if (!document.getElementById('sb-fix')) {" +
                         "var style = document.createElement('style');" +
                         "style.id = 'sb-fix';" +
@@ -49,33 +49,33 @@ public class BrowserEngine {
                         "document.head.appendChild(style);" +
                         "}");
             } else if (newState == Worker.State.FAILED) {
-                Logger.error("页面加载失败: " + webEngine.getLocation());
+                Logger.error("\u9875\u9762\u52a0\u8f7d\u5931\u8d25: " + webEngine.getLocation());
             }
         });
 
-        // 监听 URL 变化
+        // \u76d1\u542c URL \u53d8\u5316
         webEngine.locationProperty().addListener((obs, oldUrl, newUrl) -> {
             for (OnURLChangeListener listener : urlListeners) {
                 listener.onChanged(newUrl);
             }
         });
 
-        // 监听标题变化
+        // \u76d1\u542c\u6807\u9898\u53d8\u5316
         webEngine.titleProperty().addListener((obs, oldTitle, newTitle) -> {
             for (OnTitleChangeListener listener : titleListeners) {
                 listener.onChanged(newTitle);
             }
         });
 
-        // JavaScript 错误处理 (JavaFX WebView 默认支持较弱，这里记录日志)
+        // JavaScript \u9519\u8bef\u5904\u7406 (JavaFX WebView \u9ed8\u8ba4\u652f\u6301\u8f83\u5f31\uff0c\u8fd9\u91cc\u8bb0\u5f55\u65e5\u5fd7)
         webEngine.setOnError(event -> {
-            Logger.error("WebEngine 错误: " + event.getMessage());
+            Logger.error("WebEngine \u9519\u8bef: " + event.getMessage());
         });
     }
 
     public void navigate(String url) {
-        // 这里后续可以集成广告拦截拦截逻辑
-        Logger.info("导航到: " + url);
+        // \u8fd9\u91cc\u540e\u7eed\u53ef\u4ee5\u96c6\u6210\u5e7f\u544a\u62e6\u622a\u62e6\u622a\u903b\u8f91
+        Logger.info("\u5bfc\u822a\u5230: " + url);
         webEngine.load(url);
     }
 
@@ -119,7 +119,7 @@ public class BrowserEngine {
         try {
             return webEngine.executeScript(script);
         } catch (Exception e) {
-            Logger.error("执行脚本失败: " + script, e);
+            Logger.error("\u6267\u884c\u811a\u672c\u5931\u8d25: " + script, e);
             return null;
         }
     }
@@ -136,7 +136,7 @@ public class BrowserEngine {
         return webEngine;
     }
 
-    // 接口定义
+    // \u63a5\u53e3\u5b9a\u4e49
     public interface OnLoadProgressListener { void onChanged(double progress); }
     public interface OnURLChangeListener { void onChanged(String url); }
     public interface OnTitleChangeListener { void onChanged(String title); }

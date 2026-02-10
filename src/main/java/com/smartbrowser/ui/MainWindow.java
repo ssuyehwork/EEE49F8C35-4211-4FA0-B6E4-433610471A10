@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import java.net.URL;
 
 /**
- * 完整的主窗口实现 - 增强稳定性版
+ * \u5b8c\u6574\u7684\u4e3b\u7a97\u53e3\u5b9e\u73b0 - \u589e\u5f3a\u7a33\u5b9a\u6027\u7248
  */
 public class MainWindow {
     private final Stage stage;
@@ -25,7 +25,7 @@ public class MainWindow {
 
     public MainWindow(Stage stage) {
         this.stage = stage;
-        Logger.info("正在初始化 MainWindow 模块...");
+        Logger.info("\u6b63\u5728\u521d\u59cb\u5316 MainWindow \u6a21\u5757...");
 
         this.engine = new BrowserEngine();
         this.navBar = new NavigationBar();
@@ -39,38 +39,38 @@ public class MainWindow {
     private void initUI() {
         try {
             BorderPane root = new BorderPane();
-            // 设置一个淡灰色背景，防止全白导致看不出边界
+            // \u8bbe\u7f6e\u4e00\u4e2a\u6de1\u7070\u8272\u80cc\u666f\uff0c\u9632\u6b62\u5168\u767d\u5bfc\u81f4\u770b\u4e0d\u51fa\u8fb9\u754c
             root.setStyle("-fx-background-color: #f5f5f5;");
 
-            // 顶部：导航栏 + 地址栏
+            // \u9876\u90e8\uff1a\u5bfc\u822a\u680f + \u5730\u5740\u680f
             VBox topContainer = new VBox();
             topContainer.setSpacing(2);
-            // 给顶部容器设置背景色和阴影效果（调试用）
+            // \u7ed9\u9876\u90e8\u5bb9\u5668\u8bbe\u7f6e\u80cc\u666f\u8272\u548c\u9634\u5f71\u6548\u679c\uff08\u8c03\u8bd5\u7528\uff09
             topContainer.setStyle("-fx-background-color: #ffffff; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);");
             topContainer.getChildren().addAll(navBar, addressBar);
             root.setTop(topContainer);
 
-            // 中间：浏览器视图
+            // \u4e2d\u95f4\uff1a\u6d4f\u89c8\u5668\u89c6\u56fe
             root.setCenter(engine.getWebView());
 
-            // 底部：状态栏
+            // \u5e95\u90e8\uff1a\u72b6\u6001\u680f
             root.setBottom(statusBar);
 
-            // 绑定事件
+            // \u7ed1\u5b9a\u4e8b\u4ef6
             setupBindings();
 
             Scene scene = new Scene(root, 1280, 800);
 
-            // 安全加载样式表
+            // \u5b89\u5168\u52a0\u8f7d\u6837\u5f0f\u8868
             loadStyleSheet(scene, "/styles/main.css");
             loadStyleSheet(scene, "/styles/light-theme.css");
 
             stage.setScene(scene);
             stage.setTitle("SmartBrowser");
 
-            Logger.info("MainWindow UI 初始化完成");
+            Logger.info("MainWindow UI \u521d\u59cb\u5316\u5b8c\u6210");
         } catch (Exception e) {
-            Logger.error("MainWindow UI 初始化失败", e);
+            Logger.error("MainWindow UI \u521d\u59cb\u5316\u5931\u8d25", e);
         }
     }
 
@@ -94,9 +94,9 @@ public class MainWindow {
             Platform.runLater(() -> {
                 statusBar.setProgress(progress);
                 if (progress >= 1.0) {
-                    statusBar.setStatus("加载完成");
+                    statusBar.setStatus("\u52a0\u8f7d\u5b8c\u6210");
                 } else if (progress > 0) {
-                    statusBar.setStatus("正在加载 (" + (int)(progress * 100) + "%)...");
+                    statusBar.setStatus("\u6b63\u5728\u52a0\u8f7d (" + (int)(progress * 100) + "%)...");
                 }
             });
         });
@@ -107,19 +107,19 @@ public class MainWindow {
             URL cssUrl = getClass().getResource(path);
             if (cssUrl != null) {
                 scene.getStylesheets().add(cssUrl.toExternalForm());
-                Logger.info("样式表加载成功: " + path);
+                Logger.info("\u6837\u5f0f\u8868\u52a0\u8f7d\u6210\u529f: " + path);
             } else {
-                Logger.warn("未找到样式表资源: " + path);
+                Logger.warn("\u672a\u627e\u5230\u6837\u5f0f\u8868\u8d44\u6e90: " + path);
             }
         } catch (Exception e) {
-            Logger.error("加载样式表失败: " + path, e);
+            Logger.error("\u52a0\u8f7d\u6837\u5f0f\u8868\u5931\u8d25: " + path, e);
         }
     }
 
     public void show() {
-        Logger.info("正在显示主窗口...");
+        Logger.info("\u6b63\u5728\u663e\u793a\u4e3b\u7a97\u53e3...");
         stage.show();
-        // 默认导航到主页
+        // \u9ed8\u8ba4\u5bfc\u822a\u5230\u4e3b\u9875
         NavigationController.getInstance().goHome();
     }
 }

@@ -7,7 +7,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 
 /**
- * 状态栏组件
+ * \u72b6\u6001\u680f\u7ec4\u4ef6
  */
 public class StatusBar extends HBox {
     private final Label statusLabel;
@@ -17,7 +17,7 @@ public class StatusBar extends HBox {
         this.getStyleClass().add("status-bar");
         this.setSpacing(10);
 
-        statusLabel = new Label("就绪");
+        statusLabel = new Label("\u5c31\u7eea");
         progressBar = new ProgressBar(0);
         progressBar.setVisible(false);
         progressBar.setPrefWidth(200);

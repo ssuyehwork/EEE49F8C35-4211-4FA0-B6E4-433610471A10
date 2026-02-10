@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * 下载任务模型
+ * \u4e0b\u8f7d\u4efb\u52a1\u6a21\u578b
  */
 public class DownloadTask implements Serializable {
     private String id;

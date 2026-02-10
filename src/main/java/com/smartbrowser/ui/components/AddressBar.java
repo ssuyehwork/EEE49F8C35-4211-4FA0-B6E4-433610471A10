@@ -8,7 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
 /**
- * 地址栏组件
+ * \u5730\u5740\u680f\u7ec4\u4ef6
  */
 public class AddressBar extends HBox {
     private final TextField addressField;
@@ -23,11 +23,11 @@ public class AddressBar extends HBox {
 
         addressField = new TextField();
         addressField.getStyleClass().add("address-bar");
-        addressField.setPromptText("搜索或输入网址");
+        addressField.setPromptText("\u641c\u7d22\u6216\u8f93\u5165\u7f51\u5740");
         HBox.setHgrow(addressField, Priority.ALWAYS);
 
         goBtn = new Button("Go");
-        bookmarkBtn = new Button("⭐");
+        bookmarkBtn = new Button("\u2b50");
 
         initActions();
         this.getChildren().addAll(addressField, goBtn, bookmarkBtn);

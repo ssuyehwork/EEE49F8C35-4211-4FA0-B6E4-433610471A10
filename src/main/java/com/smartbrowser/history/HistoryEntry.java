@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * 历史记录条目模型
+ * \u5386\u53f2\u8bb0\u5f55\u6761\u76ee\u6a21\u578b
  */
 public class HistoryEntry implements Serializable {
     private String id;
