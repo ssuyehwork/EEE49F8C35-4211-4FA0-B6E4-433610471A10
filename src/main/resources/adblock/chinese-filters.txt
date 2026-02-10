@@ -1,0 +1,3 @@
+! Chinese Filters - Placeholder
+||ads.baidu.com^
+||ad.taobao.com^
