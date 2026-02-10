@@ -18,6 +18,8 @@ public class NavigationBar extends HBox {
     public NavigationBar() {
         this.getStyleClass().add("navigation-bar");
         this.setSpacing(5);
+        this.setPadding(new javafx.geometry.Insets(5));
+        this.setMinHeight(40);
 
         backBtn = createButton("back.svg", "后退");
         forwardBtn = createButton("forward.svg", "前进");

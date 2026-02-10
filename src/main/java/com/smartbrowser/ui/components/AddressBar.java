@@ -18,6 +18,8 @@ public class AddressBar extends HBox {
     public AddressBar() {
         this.getStyleClass().add("address-bar-container");
         this.setSpacing(5);
+        this.setPadding(new javafx.geometry.Insets(5));
+        this.setMinHeight(40);
 
         addressField = new TextField();
         addressField.getStyleClass().add("address-bar");
