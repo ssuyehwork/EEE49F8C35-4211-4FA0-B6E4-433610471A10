@@ -1,0 +1,25 @@
+/* main.css - SmartBrowser 基础样式 */
+
+.root {
+    -fx-font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+}
+
+.toolbar {
+    -fx-padding: 5 10;
+    -fx-spacing: 5;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.address-bar {
+    -fx-background-radius: 15;
+    -fx-padding: 5 10;
+}
+
+.button {
+    -fx-cursor: hand;
+}
+
+.status-bar {
+    -fx-padding: 2 10;
+    -fx-background-color: #f0f0f0;
+}
