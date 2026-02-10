@@ -23,9 +23,9 @@ public class BrowserEngine {
         this.webView = new WebView();
         this.webEngine = webView.getEngine();
 
-        // \u5f3a\u5236\u7f16\u7801\u548c\u5b57\u4f53\u4ee5\u4fee\u590d\u4e71\u7801
+        // \u5f3a\u5236\u7f16\u7801\u548c\u5b57\u4f53\u4ee5\u4fee\u590d\u4e71\u7801 (\u4f7f\u7528\u901a\u914d\u7b26 * \u4ee5\u8986\u76d6\u6240\u6709\u6807\u7b7e)
         try {
-            String css = "body, input, button, select, textarea { " +
+            String css = "* { " +
                         "font-family: 'Microsoft YaHei', 'PingFang SC', 'Segoe UI', 'Tahoma', 'Hiragino Sans GB', 'Arial', sans-serif !important; " +
                         "}";
             String base64Css = java.util.Base64.getEncoder().encodeToString(css.getBytes(java.nio.charset.StandardCharsets.UTF_8));
@@ -51,13 +51,7 @@ public class BrowserEngine {
         webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
                 Logger.info("\u9875\u9762\u52a0\u8f7d\u6210\u529f: " + webEngine.getLocation());
-                // \u518d\u6b21\u6ce8\u5165\u811a\u672c\u4ee5\u786e\u4fdd\u5b57\u4f53\u5e94\u7528
-                executeScript("if (!document.getElementById('sb-fix')) {" +
-                        "var style = document.createElement('style');" +
-                        "style.id = 'sb-fix';" +
-                        "style.innerHTML = 'body, input, button, select, textarea { font-family: \"Microsoft YaHei\", \"PingFang SC\", \"Segoe UI\", \"Tahoma\", \"Hiragino Sans GB\", \"Arial\", sans-serif !important; }';" +
-                        "document.head.appendChild(style);" +
-                        "}");
+                injectFontFixScript();
             } else if (newState == Worker.State.FAILED) {
                 Logger.error("\u9875\u9762\u52a0\u8f7d\u5931\u8d25: " + webEngine.getLocation());
             }
@@ -132,6 +126,48 @@ public class BrowserEngine {
             Logger.error("\u6267\u884c\u811a\u672c\u5931\u8d25: " + script, e);
             return null;
         }
+    }
+
+    /**
+     * \u6ce8\u5165\u5f3a\u529b\u5b57\u4f53\u4fee\u590d\u811a\u6722\uff0c\u652f\u6301\u7a3f\u900f Shadow DOM \u548c动态加载元素
+     */
+    private void injectFontFixScript() {
+        String js = "(function() {" +
+                "  function applyFont(root) {" +
+                "    if (!root) return;" +
+                "    if (root.nodeType === 9 || (root.shadowRoot || root.host)) {" +
+                "      if (!root.querySelector || !root.querySelector('#sb-font-fix')) {" +
+                "        const style = document.createElement('style');" +
+                "        style.id = 'sb-font-fix';" +
+                "        style.textContent = '* { font-family: \"Microsoft YaHei\", \"PingFang SC\", \"Segoe UI\", sans-serif !important; }';" +
+                "        if (root.appendChild) root.appendChild(style);" +
+                "        else if (root.head) root.head.appendChild(style);" +
+                "      }" +
+                "    }" +
+                "    const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);" +
+                "    let node;" +
+                "    while (node = walker.nextNode()) {" +
+                "      if (node.shadowRoot) applyFont(node.shadowRoot);" +
+                "    }" +
+                "  }" +
+                "  applyFont(document);" +
+                "  const observer = new MutationObserver((mutations) => {" +
+                "    mutations.forEach((mutation) => {" +
+                "      mutation.addedNodes.forEach((node) => {" +
+                "        if (node.nodeType === 1) {" +
+                "          if (node.shadowRoot) applyFont(node.shadowRoot);" +
+                "          const subWalker = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT);" +
+                "          let subNode;" +
+                "          while (subNode = subWalker.nextNode()) {" +
+                "            if (subNode.shadowRoot) applyFont(subNode.shadowRoot);" +
+                "          }" +
+                "        }" +
+                "      });" +
+                "    });" +
+                "  });" +
+                "  observer.observe(document.documentElement, { childList: true, subtree: true });" +
+                "})();";
+        executeScript(js);
     }
 
     public void setUserAgent(String ua) {
