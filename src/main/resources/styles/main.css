@@ -1,7 +1,7 @@
 /* main.css - SmartBrowser 基础样式 */
 
 .root {
-    -fx-font-family: "Segoe UI", "Tahoma", "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-family: "Segoe UI", "Tahoma", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Arial", sans-serif;
 }
 
 .toolbar {

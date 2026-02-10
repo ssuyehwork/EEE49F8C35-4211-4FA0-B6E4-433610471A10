@@ -1,7 +1,7 @@
 /* light-theme.css - 浅色主题 */
 
 .root {
-    -fx-font-family: "Segoe UI", "Tahoma", "Microsoft YaHei", "Arial", sans-serif;
+    -fx-font-family: "Segoe UI", "Tahoma", "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", "Arial", sans-serif;
     -fx-base: #ffffff;
     -fx-background: #f5f5f5;
     -fx-control-inner-background: #ffffff;

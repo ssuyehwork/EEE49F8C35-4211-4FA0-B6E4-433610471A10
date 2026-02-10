@@ -22,6 +22,9 @@ public class BrowserEngine {
     public BrowserEngine() {
         this.webView = new WebView();
         this.webEngine = webView.getEngine();
+        // 设置默认编码为 UTF-8
+        this.webEngine.setUserStyleSheetLocation(null);
+        this.webEngine.setUserDataDirectory(new java.io.File(System.getProperty("user.home"), ".smartbrowser/webview"));
         initListeners();
     }
 
@@ -42,7 +45,7 @@ public class BrowserEngine {
                 executeScript("if (!document.getElementById('sb-fix')) {" +
                         "var style = document.createElement('style');" +
                         "style.id = 'sb-fix';" +
-                        "style.innerHTML = 'body { font-family: \"Segoe UI\", \"Tahoma\", \"Microsoft YaHei\", \"Arial\", sans-serif !important; }';" +
+                        "style.innerHTML = 'body, input, button, select, textarea { font-family: \"Segoe UI\", \"Tahoma\", \"Microsoft YaHei\", \"PingFang SC\", \"Hiragino Sans GB\", \"Arial\", sans-serif !important; }';" +
                         "document.head.appendChild(style);" +
                         "}");
             } else if (newState == Worker.State.FAILED) {
