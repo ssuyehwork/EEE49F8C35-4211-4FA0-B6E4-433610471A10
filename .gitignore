@@ -1,0 +1,15 @@
+target/
+*.class
+*.log
+.idea/
+*.iml
+.settings/
+.project
+.classpath
+bin/
+data/bookmarks.json
+data/sessions.json
+data/downloads.json
+data/settings.json
+data/history.db
+data/adblock/whitelist.txt

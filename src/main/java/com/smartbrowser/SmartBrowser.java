@@ -1,9 +1,8 @@
 package com.smartbrowser;
 
+import com.smartbrowser.ui.MainWindow;
 import com.smartbrowser.utils.Logger;
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
@@ -16,12 +15,8 @@ public class SmartBrowser extends Application {
         try {
             Logger.info("正在启动 SmartBrowser...");
 
-            BorderPane root = new BorderPane();
-            Scene scene = new Scene(root, 1280, 800);
-
-            primaryStage.setTitle("SmartBrowser");
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            MainWindow mainWindow = new MainWindow(primaryStage);
+            mainWindow.show();
 
             Logger.info("SmartBrowser 启动成功");
         } catch (Exception e) {
@@ -32,7 +27,6 @@ public class SmartBrowser extends Application {
     @Override
     public void stop() {
         Logger.info("正在关闭 SmartBrowser...");
-        // 这里后续将添加保存数据、关闭线程池等逻辑
     }
 
     public static void main(String[] args) {

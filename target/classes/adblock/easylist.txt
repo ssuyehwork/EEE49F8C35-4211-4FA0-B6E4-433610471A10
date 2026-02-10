@@ -1,3 +1,0 @@
-! EasyList - Placeholder
-||ads.example.com^
-||doubleclick.net^

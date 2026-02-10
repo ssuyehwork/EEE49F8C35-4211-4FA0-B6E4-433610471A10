@@ -1,3 +1,0 @@
-! EasyPrivacy - Placeholder
-||analytics.example.com^
-||tracking.net^
