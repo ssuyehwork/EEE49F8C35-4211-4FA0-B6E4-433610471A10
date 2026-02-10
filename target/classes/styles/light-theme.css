@@ -1,0 +1,18 @@
+/* light-theme.css - 浅色主题 */
+
+.root {
+    -fx-base: #ffffff;
+    -fx-background: #f5f5f5;
+    -fx-control-inner-background: #ffffff;
+}
+
+.toolbar {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+}
+
+.address-bar {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #333333;
+}
