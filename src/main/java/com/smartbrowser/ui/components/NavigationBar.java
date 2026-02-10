@@ -21,11 +21,11 @@ public class NavigationBar extends HBox {
         this.setPadding(new javafx.geometry.Insets(5));
         this.setMinHeight(40);
 
-        backBtn = createButton("back.svg", "\u540e\u9000");
-        forwardBtn = createButton("forward.svg", "\u524d\u8fdb");
-        refreshBtn = createButton("refresh.svg", "\u5237\u65b0");
-        stopBtn = new Button("\u00d7"); // \u6682\u65f6\u7528\u6587\u672c
-        homeBtn = new Button("\u1f3e0"); // \u6682\u65f6\u7528\u6587\u672c
+        backBtn = createButton("back.svg", "\u25c0"); // \u25c0 = \u25c0
+        forwardBtn = createButton("forward.svg", "\u25b6"); // \u25b6 = \u25b6
+        refreshBtn = createButton("refresh.svg", "\u21bb"); // \u21bb = \u21bb
+        stopBtn = createButton("stop.svg", "\u2715"); // \u2715 = \u2715
+        homeBtn = createButton("home.svg", "\u2302"); // \u2302 = \u2302
 
         initActions();
         this.getChildren().addAll(backBtn, forwardBtn, refreshBtn, stopBtn, homeBtn);

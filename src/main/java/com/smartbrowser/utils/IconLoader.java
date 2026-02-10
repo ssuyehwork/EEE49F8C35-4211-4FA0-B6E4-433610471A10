@@ -25,7 +25,7 @@ public class IconLoader {
             // backgroundLoading = false \u786e\u4fdd\u7acb\u5373\u5c1d\u8bd5\u52a0\u8f7d\u4ee5\u4fbf\u68c0\u67e5\u9519\u8bef
             Image img = new Image(is);
             if (img.isError()) {
-                Logger.warn("\u56fe\u6807\u52a0\u8f7d\u51fa\u9519 (\u53ef\u80fd\u662f\u4e0d\u652f\u6301\u7684\u683c\u5f0f): " + name);
+                // \u51cf\u5c11\u65e5\u5fd7\u566a\u97f3\uff0c\u56e0\u4e3a JavaFX \u539f\u751f\u4e0d\u652f\u6301 SVG \u662f\u5df2\u77e5\u7684
                 return null;
             }
             return img;
