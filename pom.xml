@@ -117,6 +117,7 @@
                             <mainClass>com.smartbrowser.SmartBrowser</mainClass>
                             <options>
                                 <option>-Dfile.encoding=UTF-8</option>
+                                <option>-Dsun.jnu.encoding=UTF-8</option>
                             </options>
                         </configuration>
                     </execution>

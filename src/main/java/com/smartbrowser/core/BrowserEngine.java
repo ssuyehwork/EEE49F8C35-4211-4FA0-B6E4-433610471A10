@@ -22,8 +22,18 @@ public class BrowserEngine {
     public BrowserEngine() {
         this.webView = new WebView();
         this.webEngine = webView.getEngine();
-        // \u8bbe\u7f6e\u9ed8\u8ba4\u7f16\u7801\u4e3a UTF-8
-        this.webEngine.setUserStyleSheetLocation(null);
+
+        // \u5f3a\u5236\u7f16\u7801\u548c\u5b57\u4f53\u4ee5\u4fee\u590d\u4e71\u7801
+        try {
+            String css = "body, input, button, select, textarea { " +
+                        "font-family: 'Segoe UI', 'Tahoma', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Arial', sans-serif !important; " +
+                        "}";
+            String base64Css = java.util.Base64.getEncoder().encodeToString(css.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+            this.webEngine.setUserStyleSheetLocation("data:text/css;base64," + base64Css);
+        } catch (Exception e) {
+            Logger.error("\u8bbe\u7f6e\u9ed8\u8ba4\u6837\u5f0f\u8868\u5931\u8d25", e);
+        }
+
         this.webEngine.setUserDataDirectory(new java.io.File(System.getProperty("user.home"), ".smartbrowser/webview"));
         initListeners();
     }
@@ -41,7 +51,7 @@ public class BrowserEngine {
         webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
                 Logger.info("\u9875\u9762\u52a0\u8f7d\u6210\u529f: " + webEngine.getLocation());
-                // \u6ce8\u5165 CSS \u4fee\u590d\u6f5c\u5728\u7684\u5b57\u4f53\u6e32\u67d3/\u7f16\u7801\u4e71\u7801\u89c6\u89c9\u95ee\u9898
+                // \u518d\u6b21\u6ce8\u5165\u811a\u672c\u4ee5\u786e\u4fdd\u5b57\u4f53\u5e94\u7528
                 executeScript("if (!document.getElementById('sb-fix')) {" +
                         "var style = document.createElement('style');" +
                         "style.id = 'sb-fix';" +
