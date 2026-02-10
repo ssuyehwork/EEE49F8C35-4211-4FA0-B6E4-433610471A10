@@ -107,6 +107,9 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>com.smartbrowser.SmartBrowser</mainClass>
+                            <options>
+                                <option>-Dfile.encoding=UTF-8</option>
+                            </options>
                         </configuration>
                     </execution>
                 </executions>

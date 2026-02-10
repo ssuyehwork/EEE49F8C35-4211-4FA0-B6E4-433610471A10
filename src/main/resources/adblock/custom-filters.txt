@@ -1,0 +1,3 @@
+! Custom Filters - Placeholder
+||example-ads.com^
+||another-tracking-site.net^

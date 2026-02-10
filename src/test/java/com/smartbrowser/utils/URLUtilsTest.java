@@ -15,7 +15,7 @@ public class URLUtilsTest {
 
     @Test
     public void testParseInput() {
-        assertEquals("https://www.baidu.com/s?wd=hello+world", URLUtils.parseInput("hello world"));
+        assertEquals("https://www.google.com/search?q=hello+world", URLUtils.parseInput("hello world"));
         assertEquals("http://www.google.com", URLUtils.parseInput("http://www.google.com"));
         assertEquals("http://google.com", URLUtils.parseInput("google.com"));
     }

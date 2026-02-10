@@ -10,7 +10,7 @@ public class NavigationController {
     private static NavigationController instance;
 
     private BrowserEngine currentEngine;
-    private String homePage = "https://www.baidu.com";
+    private String homePage = "https://www.google.com";
 
     // 虽然 WebEngine 有历史记录，但按要求维护自定义栈
     private final Stack<String> backStack = new Stack<>();

@@ -44,7 +44,7 @@ public class URLUtils {
         }
 
         // 否则视为搜索词
-        return buildSearchURL(input, "baidu");
+        return buildSearchURL(input, "google");
     }
 
     /**
@@ -81,8 +81,8 @@ public class URLUtils {
         } else if ("bing".equalsIgnoreCase(searchEngine)) {
             return "https://www.bing.com/search?q=" + encodedQuery;
         } else {
-            // 默认百度
-            return "https://www.baidu.com/s?wd=" + encodedQuery;
+            // 默认 Google
+            return "https://www.google.com/search?q=" + encodedQuery;
         }
     }
 

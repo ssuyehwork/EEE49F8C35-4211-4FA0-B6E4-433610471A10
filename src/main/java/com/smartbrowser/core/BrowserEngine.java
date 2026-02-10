@@ -38,6 +38,13 @@ public class BrowserEngine {
         webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
             if (newState == Worker.State.SUCCEEDED) {
                 Logger.info("页面加载成功: " + webEngine.getLocation());
+                // 注入 CSS 修复潜在的字体渲染/编码乱码视觉问题
+                executeScript("if (!document.getElementById('sb-fix')) {" +
+                        "var style = document.createElement('style');" +
+                        "style.id = 'sb-fix';" +
+                        "style.innerHTML = 'body { font-family: \"Segoe UI\", \"Tahoma\", \"Microsoft YaHei\", \"Arial\", sans-serif !important; }';" +
+                        "document.head.appendChild(style);" +
+                        "}");
             } else if (newState == Worker.State.FAILED) {
                 Logger.error("页面加载失败: " + webEngine.getLocation());
             }
