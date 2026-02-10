@@ -57,8 +57,8 @@
 # 清理并打包
 mvn clean package
 
-# 运行 (带编码参数)
-mvn javafx:run -Dfile.encoding=UTF-8
+# 运行 (带完整编码参数)
+mvn javafx:run -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8
 ```
 
 ---

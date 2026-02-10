@@ -39,10 +39,7 @@ public class SmartBrowser extends Application {
     }
 
     public static void main(String[] args) {
-        // \u5728 JVM \u5c42\u9762\u5c3d\u53ef\u80fd\u5f3a\u5236 UTF-8
-        System.setProperty("file.encoding", "UTF-8");
-        System.setProperty("sun.jnu.encoding", "UTF-8");
-        System.setProperty("com.sun.webkit.defaultEncoding", "UTF-8");
+        // \u6ce8\uff1a\u7f16\u7801\u8bbe\u7f6e\u5df2\u79fb\u81f3 Maven \u914d\u7f6e\u548c\u542f\u52a8\u811a\u6722\u7684 JVM \u53c2\u6570\u4e2d\uff0c\u4ee5\u786e\u4fdd\u5728 JVM \u521d\u59cb\u5316\u65f6\u751f\u6548
         launch(args);
     }
 }

@@ -18,8 +18,8 @@ echo 正在编译并运行 SmartBrowser...
 echo 提示：如果是第一次运行，下载依赖可能需要一些时间。
 echo.
 
-:: 使用 UTF-8 强制参数运行
-call mvn clean javafx:run -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Dcom.sun.webkit.defaultEncoding=UTF-8
+:: 使用完整的 UTF-8 强制参数运行
+call mvn clean javafx:run -Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8 -Dsun.stdout.encoding=UTF-8 -Dsun.stderr.encoding=UTF-8 -Dcom.sun.webkit.defaultEncoding=UTF-8
 
 if %errorlevel% neq 0 (
     echo.

@@ -26,7 +26,7 @@ public class BrowserEngine {
         // \u5f3a\u5236\u7f16\u7801\u548c\u5b57\u4f53\u4ee5\u4fee\u590d\u4e71\u7801
         try {
             String css = "body, input, button, select, textarea { " +
-                        "font-family: 'Segoe UI', 'Tahoma', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', 'Arial', sans-serif !important; " +
+                        "font-family: 'Microsoft YaHei', 'PingFang SC', 'Segoe UI', 'Tahoma', 'Hiragino Sans GB', 'Arial', sans-serif !important; " +
                         "}";
             String base64Css = java.util.Base64.getEncoder().encodeToString(css.getBytes(java.nio.charset.StandardCharsets.UTF_8));
             this.webEngine.setUserStyleSheetLocation("data:text/css;base64," + base64Css);
@@ -55,7 +55,7 @@ public class BrowserEngine {
                 executeScript("if (!document.getElementById('sb-fix')) {" +
                         "var style = document.createElement('style');" +
                         "style.id = 'sb-fix';" +
-                        "style.innerHTML = 'body, input, button, select, textarea { font-family: \"Segoe UI\", \"Tahoma\", \"Microsoft YaHei\", \"PingFang SC\", \"Hiragino Sans GB\", \"Arial\", sans-serif !important; }';" +
+                        "style.innerHTML = 'body, input, button, select, textarea { font-family: \"Microsoft YaHei\", \"PingFang SC\", \"Segoe UI\", \"Tahoma\", \"Hiragino Sans GB\", \"Arial\", sans-serif !important; }';" +
                         "document.head.appendChild(style);" +
                         "}");
             } else if (newState == Worker.State.FAILED) {
