@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * 书签文件夹模型
+ * \u4e66\u7b7e\u6587\u4ef6\u5939\u6a21\u578b
  */
 public class BookmarkFolder implements Serializable {
     private String id;
@@ -96,7 +96,7 @@ public class BookmarkFolder implements Serializable {
     }
 
     /**
-     * 递归获取所有书签
+     * \u9012\u5f52\u83b7\u53d6\u6240\u6709\u4e66\u7b7e
      */
     public List<Bookmark> getAllBookmarks() {
         List<Bookmark> all = new ArrayList<>(bookmarks);

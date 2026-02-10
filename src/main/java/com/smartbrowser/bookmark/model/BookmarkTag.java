@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * 书签标签模型
+ * \u4e66\u7b7e\u6807\u7b7e\u6a21\u578b
  */
 public class BookmarkTag implements Serializable {
     private String name;

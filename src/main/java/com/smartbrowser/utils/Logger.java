@@ -3,7 +3,7 @@ package com.smartbrowser.utils;
 import org.slf4j.LoggerFactory;
 
 /**
- * 日志工具类，封装 SLF4J 功能
+ * \u65e5\u5fd7\u5de5\u5177\u7c7b\uff0c\u5c01\u88c5 SLF4J \u529f\u80fd
  */
 public class Logger {
     private static org.slf4j.Logger getLogger() {

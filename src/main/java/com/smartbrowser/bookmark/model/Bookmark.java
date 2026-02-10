@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * 书签模型
+ * \u4e66\u7b7e\u6a21\u578b
  */
 public class Bookmark implements Serializable {
     private String id;
@@ -18,7 +18,7 @@ public class Bookmark implements Serializable {
     private int visitCount;
     private String icon;
     private List<BookmarkTag> tags;
-    private transient BookmarkFolder parent; // 使用 transient 避免序列化循环
+    private transient BookmarkFolder parent; // \u4f7f\u7528 transient \u907f\u514d\u5e8f\u5217\u5316\u5faa\u73af
 
     public Bookmark() {
         this.id = UUID.randomUUID().toString();

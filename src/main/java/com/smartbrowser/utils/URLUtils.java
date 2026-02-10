@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 /**
- * URL 解析与验证工具类
+ * URL \u89e3\u6790\u4e0e\u9a8c\u8bc1\u5de5\u5177\u7c7b
  */
 public class URLUtils {
     private static final Pattern URL_PATTERN = Pattern.compile(
@@ -15,7 +15,7 @@ public class URLUtils {
     );
 
     /**
-     * 验证 URL 格式
+     * \u9a8c\u8bc1 URL \u683c\u5f0f
      */
     public static boolean isValidURL(String url) {
         if (url == null || url.trim().isEmpty()) {
@@ -25,7 +25,7 @@ public class URLUtils {
     }
 
     /**
-     * 智能解析输入（区分 URL 和搜索关键词）
+     * \u667a\u80fd\u89e3\u6790\u8f93\u5165\uff08\u533a\u5206 URL \u548c\u641c\u7d22\u5173\u952e\u8bcd\uff09
      */
     public static String parseInput(String input) {
         if (input == null) return "";
@@ -35,7 +35,7 @@ public class URLUtils {
             return input;
         }
         
-        // 尝试自动添加前缀
+        // \u5c1d\u8bd5\u81ea\u52a8\u6dfb\u52a0\u524d\u7f00
         if (input.contains(".") && !input.contains(" ")) {
             String urlWithPrefix = addHttpPrefix(input);
             if (isValidURL(urlWithPrefix)) {
@@ -43,12 +43,12 @@ public class URLUtils {
             }
         }
         
-        // 否则视为搜索词
-        return buildSearchURL(input, "baidu");
+        // \u5426\u5219\u89c6\u4e3a\u641c\u7d22\u8bcd
+        return buildSearchURL(input, "google");
     }
 
     /**
-     * 自动添加 http:// 前缀
+     * \u81ea\u52a8\u6dfb\u52a0 http:// \u524d\u7f00
      */
     public static String addHttpPrefix(String url) {
         if (!url.startsWith("http://") && !url.startsWith("https://") && 
@@ -59,7 +59,7 @@ public class URLUtils {
     }
 
     /**
-     * 提取域名
+     * \u63d0\u53d6\u57df\u540d
      */
     public static String extractDomain(String url) {
         try {
@@ -72,7 +72,7 @@ public class URLUtils {
     }
 
     /**
-     * 构建搜索 URL
+     * \u6784\u5efa\u641c\u7d22 URL
      */
     public static String buildSearchURL(String query, String searchEngine) {
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
@@ -81,13 +81,13 @@ public class URLUtils {
         } else if ("bing".equalsIgnoreCase(searchEngine)) {
             return "https://www.bing.com/search?q=" + encodedQuery;
         } else {
-            // 默认百度
-            return "https://www.baidu.com/s?wd=" + encodedQuery;
+            // \u9ed8\u8ba4 Google
+            return "https://www.google.com/search?q=" + encodedQuery;
         }
     }
 
     /**
-     * 标准化 URL
+     * \u6807\u51c6\u5316 URL
      */
     public static String normalizeURL(String url) {
         if (url == null) return "";

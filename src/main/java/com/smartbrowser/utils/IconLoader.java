@@ -5,40 +5,49 @@ import javafx.scene.image.ImageView;
 import java.io.InputStream;
 
 /**
- * 图标加载工具类
+ * \u56fe\u6807\u52a0\u8f7d\u5de5\u5177\u7c7b - \u589e\u5f3a\u7248
  */
 public class IconLoader {
     private static final String ICON_PATH = "/icons/";
 
     /**
-     * 加载图标
-     * @param name 图标名称（带扩展名）
-     * @return Image对象
+     * \u52a0\u8f7d\u56fe\u6807
+     * @param name \u56fe\u6807\u540d\u79f0\uff08\u5e26\u6269\u5c55\u540d\uff09
+     * @return Image\u5bf9\u8c61\uff0c\u52a0\u8f7d\u5931\u8d25\u8fd4\u56denull
      */
     public static Image loadIcon(String name) {
         try {
             InputStream is = IconLoader.class.getResourceAsStream(ICON_PATH + name);
-            if (is != null) {
-                return new Image(is);
+            if (is == null) {
+                Logger.warn("\u56fe\u6807\u8d44\u6e90\u4e0d\u5b58\u5728: " + ICON_PATH + name);
+                return null;
             }
+            // backgroundLoading = false \u786e\u4fdd\u7acb\u5373\u5c1d\u8bd5\u52a0\u8f7d\u4ee5\u4fbf\u68c0\u67e5\u9519\u8bef
+            Image img = new Image(is);
+            if (img.isError()) {
+                // \u51cf\u5c11\u65e5\u5fd7\u566a\u97f3\uff0c\u56e0\u4e3a JavaFX \u539f\u751f\u4e0d\u652f\u6301 SVG \u662f\u5df2\u77e5\u7684
+                return null;
+            }
+            return img;
         } catch (Exception e) {
-            Logger.error("加载图标失败: " + name, e);
+            Logger.error("\u52a0\u8f7d\u56fe\u6807\u8fc7\u7a0b\u53d1\u751f\u5f02\u5e38: " + name, e);
+            return null;
         }
-        return null;
     }
 
     /**
-     * 加载图标并返回 ImageView
+     * \u52a0\u8f7d\u56fe\u6807\u5e76\u8fd4\u56de ImageView
      */
     public static ImageView loadIconView(String name, double width, double height) {
         Image img = loadIcon(name);
+        ImageView view = new ImageView();
         if (img != null) {
-            ImageView view = new ImageView(img);
+            view.setImage(img);
             view.setFitWidth(width);
             view.setFitHeight(height);
             view.setPreserveRatio(true);
-            return view;
+            view.setSmooth(true);
         }
-        return new ImageView();
+        return view;
     }
 }
