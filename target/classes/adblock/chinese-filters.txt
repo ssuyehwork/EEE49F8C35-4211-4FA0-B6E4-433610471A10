@@ -1,3 +1,3 @@
 ! Chinese Filters - Placeholder
-||tanx.com^
-||baidustatic.com/ads^
+||ads.baidu.com^
+||ad.taobao.com^

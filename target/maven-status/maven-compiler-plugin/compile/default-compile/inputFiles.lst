@@ -1,9 +1,13 @@
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\core\NavigationController.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\ui\components\NavigationBar.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\SmartBrowser.java
+G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\adblocker\AdBlocker.java
+G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\adblocker\WhitelistManager.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\ui\components\StatusBar.java
+G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\adblocker\RuleEngine.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\utils\URLUtils.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\utils\Logger.java
+G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\adblocker\FilterRule.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\bookmark\model\BookmarkTag.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\bookmark\model\Bookmark.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\history\HistoryEntry.java
@@ -12,6 +16,8 @@ G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\utils\Js
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\bookmark\model\BookmarkFolder.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\ui\components\AddressBar.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\download\DownloadTask.java
+G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\adblocker\AdBlockStats.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\core\BrowserEngine.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\ui\MainWindow.java
+G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\adblocker\RuleLoader.java
 G:\Java\SmartBrowser_Parent\SmartBrowser\src\main\java\com\smartbrowser\utils\IconLoader.java
