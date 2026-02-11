@@ -14,6 +14,11 @@ public class SmartBrowser extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
+            // \u521d\u59cb\u5316全局 Cookie \u7ba1\u7406\u5668\uff0c\u589e\u5f3a WebView \u7684\u767b\u5f55持久化能力
+            if (java.net.CookieHandler.getDefault() == null) {
+                java.net.CookieHandler.setDefault(new java.net.CookieManager(null, java.net.CookiePolicy.ACCEPT_ALL));
+            }
+
             // \u6253\u5370\u73af\u5883\u8bca\u65ad\u4fe1\u606f
             System.out.println("=== Environment Diagnosis ===");
             System.out.println("Default Charset: " + Charset.defaultCharset());

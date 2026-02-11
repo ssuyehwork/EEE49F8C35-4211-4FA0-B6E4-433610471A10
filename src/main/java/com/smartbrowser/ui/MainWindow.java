@@ -22,6 +22,7 @@ public class MainWindow {
     private final NavigationBar navBar;
     private final AddressBar addressBar;
     private final StatusBar statusBar;
+    private VBox topContainer;
 
     public MainWindow(Stage stage) {
         this.stage = stage;
@@ -43,7 +44,7 @@ public class MainWindow {
             root.setStyle("-fx-background-color: #f5f5f5;");
 
             // \u9876\u90e8\uff1a\u5bfc\u822a\u680f + \u5730\u5740\u680f
-            VBox topContainer = new VBox();
+            this.topContainer = new VBox();
             topContainer.setSpacing(2);
             // \u7ed9\u9876\u90e8\u5bb9\u5668\u8bbe\u7f6e\u80cc\u666f\u8272\u548c\u9634\u5f71\u6548\u679c\uff08\u8c03\u8bd5\u7528\uff09
             topContainer.setStyle("-fx-background-color: #ffffff; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);");
@@ -67,6 +68,9 @@ public class MainWindow {
 
             stage.setScene(scene);
             stage.setTitle("SmartBrowser");
+
+            // \u914d\u7f6e\u5168\u5c4f\u652f\u6301
+            setupFullScreen();
 
             Logger.info("MainWindow UI \u521d\u59cb\u5316\u5b8c\u6210");
         } catch (Exception e) {
@@ -114,6 +118,36 @@ public class MainWindow {
         } catch (Exception e) {
             Logger.error("\u52a0\u8f7d\u6837\u5f0f\u8868\u5931\u8d25: " + path, e);
         }
+    }
+
+    private void setupFullScreen() {
+        engine.setFullScreenHandler(full -> {
+            Platform.runLater(() -> {
+                stage.setFullScreen(full);
+                // \u5168\u5c4f\u65f6\u9690\u85cf\u63a7\u5236\u680f\u548c\u72b6\u6001\u680f
+                topContainer.setVisible(!full);
+                topContainer.setManaged(!full);
+                statusBar.setVisible(!full);
+                statusBar.setManaged(!full);
+
+                if (full) {
+                    Logger.info("\u8fdb\u5165\u5168\u5c4f\u6a21\u5f0f");
+                } else {
+                    Logger.info("\u9000\u51fa\u5168\u5c4f\u6a21\u5f0f");
+                }
+            });
+            return null;
+        });
+
+        // \u76d1\u542c Stage \u7684\u5168\u5c4f\u5c5e\u6027\uff0c\u4ee5\u5904\u7406 ESC \u952e\u9000\u51fa\u7684\u60c5\u51b5
+        stage.fullScreenProperty().addListener((obs, old, isFullScreen) -> {
+            if (!isFullScreen) {
+                topContainer.setVisible(true);
+                topContainer.setManaged(true);
+                statusBar.setVisible(true);
+                statusBar.setManaged(true);
+            }
+        });
     }
 
     public void show() {

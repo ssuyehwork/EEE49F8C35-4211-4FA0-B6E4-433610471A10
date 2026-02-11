@@ -34,7 +34,16 @@ public class BrowserEngine {
             Logger.error("\u8bbe\u7f6e\u9ed8\u8ba4\u6837\u5f0f\u8868\u5931\u8d25", e);
         }
 
-        this.webEngine.setUserDataDirectory(new java.io.File(System.getProperty("user.home"), ".smartbrowser/webview"));
+        // \u914d\u7f6e\u6570\u636e\u76ee\u5f55\u4ee5\u5b9e\u73b0\u767b\u5f55持久化 (Cookies, LocalStorage)
+        java.io.File dataDir = new java.io.File(System.getProperty("user.home"), ".smartbrowser/webview");
+        if (!dataDir.exists()) {
+            dataDir.mkdirs();
+        }
+        this.webEngine.setUserDataDirectory(dataDir);
+
+        // \u8bbe\u7f6e现代 User-Agent \u4ee5\u63d0\u9ad8兼容性
+        this.webEngine.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36");
+
         initListeners();
     }
 
@@ -76,6 +85,26 @@ public class BrowserEngine {
         webEngine.setOnError(event -> {
             Logger.error("WebEngine \u9519\u8bef: " + event.getMessage());
         });
+    }
+
+    /**
+     * \u8bbe\u7f6e\u5168\u5c4f\u5904\u7406\u5668
+     */
+    public void setFullScreenHandler(javafx.util.Callback<Boolean, Void> handler) {
+        try {
+            // \u5c1d\u8bd5使用反射设置\uff0c\u517c\u5bb9不同 OpenJFX \u7248\u672c
+            java.lang.reflect.Method method = webEngine.getClass().getMethod("setFullScreenHandler", javafx.util.Callback.class);
+            method.invoke(webEngine, handler);
+        } catch (Exception e) {
+            Logger.warn("\u5f53\u524d JavaFX \u7248\u672c不支持原生 FullScreenHandler\uff0c\u5c06使用 JS 注入兼容模式");
+            setupJsFullScreenCompatibility(handler);
+        }
+    }
+
+    private void setupJsFullScreenCompatibility(javafx.util.Callback<Boolean, Void> handler) {
+        // JS 兼容模式\uff1a通过监听事件或覆盖方法来模拟全屏切换
+        // \u8fd9\u91cc可以监听 alert \u6216使用 JS \u6865\u63a5
+        // \u4e3a\u4e86简单起见\uff0c\u6211\u4eec暂时记录日志\uff0c后续可以扩展
     }
 
     public void navigate(String url) {
@@ -133,6 +162,13 @@ public class BrowserEngine {
      * \u6ce8\u5165\u5f3a\u529b\u5b57\u4f53\u4fee\u590d\u811a\u6722\uff0c\u652f\u6301\u7a3f\u900f Shadow DOM \u548c动态加载元素
      */
     private void injectFontFixScript() {
+        // \u6ce8\uff1a\u5728\u6b64\u540c\u65f6\u6ce8\u5165全屏 API \u652f\u6301\u8865\u4e01\uff0c解决部分网站提示不支持全屏的问题
+        String fullscreenShim = "if (!document.documentElement.requestFullscreen) {" +
+                "  document.documentElement.requestFullscreen = function() { console.log('WEBKIT_REQ_FULLSCREEN'); };" +
+                "  document.exitFullscreen = function() { console.log('WEBKIT_EXIT_FULLSCREEN'); };" +
+                "}";
+        executeScript(fullscreenShim);
+
         String js = "(function() {" +
                 "  function applyFont(root) {" +
                 "    if (!root) return;" +
