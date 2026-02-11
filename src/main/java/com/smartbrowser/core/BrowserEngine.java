@@ -1,6 +1,9 @@
 package com.smartbrowser.core;
 
+import com.smartbrowser.adblocker.AdBlocker;
+import com.smartbrowser.utils.JsonUtils;
 import com.smartbrowser.utils.Logger;
+import com.smartbrowser.utils.URLUtils;
 import javafx.concurrent.Worker;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -52,6 +55,7 @@ public class BrowserEngine {
             if (newState == Worker.State.SUCCEEDED) {
                 Logger.info("\u9875\u9762\u52a0\u8f7d\u6210\u529f: " + webEngine.getLocation());
                 injectFontFixScript();
+                injectAdBlockCSS(); // \u6ce8\u5165广告拦截 CSS \u89c4\u5219
             } else if (newState == Worker.State.FAILED) {
                 Logger.error("\u9875\u9762\u52a0\u8f7d\u5931\u8d25: " + webEngine.getLocation());
             }
@@ -78,7 +82,11 @@ public class BrowserEngine {
     }
 
     public void navigate(String url) {
-        // \u8fd9\u91cc\u540e\u7eed\u53ef\u4ee5\u96c6\u6210\u5e7f\u544a\u62e6\u622a\u62e6\u622a\u903b\u8f91
+        // \u96c6\u6210\u5e7f\u544a\u62e6\u622a\u903b\u8f91
+        if (AdBlocker.getInstance().shouldBlock(url, getURL())) {
+            Logger.warn("\u5bfc\u822a\u88ab\u62e6\u622a (\u5e7f\u544a): " + url);
+            return;
+        }
         Logger.info("\u5bfc\u822a\u5230: " + url);
         webEngine.load(url);
     }
@@ -125,6 +133,30 @@ public class BrowserEngine {
         } catch (Exception e) {
             Logger.error("\u6267\u884c\u811a\u672c\u5931\u8d25: " + script, e);
             return null;
+        }
+    }
+
+    /**
+     * \u6ce8\u5165广告拦截 CSS \u89c4\u5219\uff0c\u9690\u85cf广告元素
+     */
+    private void injectAdBlockCSS() {
+        String domain = URLUtils.extractDomain(getURL());
+        List<String> selectors = AdBlocker.getInstance().getCSSRules(domain);
+
+        if (selectors != null && !selectors.isEmpty()) {
+            StringBuilder cssBuilder = new StringBuilder();
+            for (String selector : selectors) {
+                cssBuilder.append(selector).append(" { display: none !important; }\n");
+            }
+
+            String js = "(function() {" +
+                    "  const style = document.createElement('style');" +
+                    "  style.id = 'sb-adblock-css';" +
+                    "  style.textContent = " + JsonUtils.toJson(cssBuilder.toString()) + ";" +
+                    "  document.head.appendChild(style);" +
+                    "})();";
+            executeScript(js);
+            Logger.info("\u5df2\u4e3a域名 " + domain + " \u6ce8\u5165 " + selectors.size() + " \u6761广告隐藏规则");
         }
     }
 
