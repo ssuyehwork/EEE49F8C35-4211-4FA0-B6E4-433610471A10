@@ -44,12 +44,33 @@ public class SmartBrowser extends Application {
     }
 
     public static void main(String[] args) {
-        // \u5728\u4ee3\u7801\u5c42\u9762\u505a\u6700\u540e\u7684\u7f16\u7801\u515c\u5e95\uff0c\u89e3\u51b3 Windows \u4e71\u7801
+        // \u7f16\u7801\u914d\u7f6e\uff08\u4fdd\u7559\uff09
         System.setProperty("file.encoding", "UTF-8");
         System.setProperty("sun.jnu.encoding", "UTF-8");
         System.setProperty("com.sun.webkit.defaultEncoding", "UTF-8");
         System.setProperty("sun.stdout.encoding", "UTF-8");
         System.setProperty("sun.stderr.encoding", "UTF-8");
+
+        // === Cookie\u6301\u4e45\u5316\u914d\u7f6e ===
+        System.setProperty("com.sun.webkit.enableCookies", "true");
+        System.setProperty("com.sun.webkit.localStorageEnabled", "true");
+        System.setProperty("com.sun.webkit.sessionStorageEnabled", "true");
+
+        // === \u786c\u4ef6\u52a0\u901f\u914d\u7f6e ===
+        // Windows: \u4f18\u5148\u4f7f\u7528DirectX
+        System.setProperty("prism.order", "d3d,sw");
+        System.setProperty("prism.vsync", "true");
+        System.setProperty("prism.allowhidpi", "true");
+
+        // === \u5a92\u4f53\u64ad\u653e\u914d\u7f6e ===
+        System.setProperty("com.sun.webkit.useHTTP2Loader", "true");
+        System.setProperty("http.maxConnections", "10");
+
+        // === \u6027\u80fd\u4f18\u5316 ===
+        System.setProperty("javafx.animation.fullspeed", "true");
+        System.setProperty("javafx.pulseLogger", "false");
+
+        Logger.info("\u7cfb\u7edf\u914d\u7f6e\u5b8c\u6210 - Cookie\u5df2\u542f\u7528, \u786c\u4ef6\u52a0\u901f\u5df2\u542f\u7528");
 
         launch(args);
     }

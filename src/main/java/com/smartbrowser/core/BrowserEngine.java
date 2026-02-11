@@ -23,7 +23,45 @@ public class BrowserEngine {
         this.webView = new WebView();
         this.webEngine = webView.getEngine();
 
-        // \u5f3a\u5236\u7f16\u7801\u548c\u5b57\u4f53\u4ee5\u4fee\u590d\u4e71\u7801 (\u4f7f\u7528\u901a\u914d\u7b26 * \u4ee5\u8986\u76d6\u6240\u6709\u6807\u7b7e)
+        // === 1. Cookie\u6301\u4e45\u5316\u914d\u7f6e ===
+        try {
+            // \u8bbe\u7f6e\u6301\u4e45\u5316\u6570\u636e\u76ee\u5f55\uff08Cookie\u3001LocalStorage\u7b49\uff09
+            java.io.File dataDir = new java.io.File(System.getProperty("user.home"), ".smartbrowser/webview");
+            if (!dataDir.exists()) {
+                dataDir.mkdirs();
+            }
+            this.webEngine.setUserDataDirectory(dataDir);
+            Logger.info("WebView\u6570\u636e\u76ee\u5f55: " + dataDir.getAbsolutePath());
+
+            // \u542f\u7528JavaScript\uff08\u5fc5\u987b\uff0c\u5426\u5219\u5f88\u591a\u7f51\u7ad9\u529f\u80fd\u4e0d\u53ef\u7528\uff09
+            this.webEngine.setJavaScriptEnabled(true);
+
+            // \u8bbe\u7f6eUser-Agent\uff08\u6a21\u62df\u73b0\u4ee3\u6d4f\u89c8\u5668\uff0c\u907f\u514d\u7f51\u7ad9\u964d\u7ea7\uff09
+            String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+                              "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+            this.webEngine.setUserAgent(userAgent);
+
+        } catch (Exception e) {
+            Logger.error("\u914d\u7f6eWebEngine\u5931\u8d25", e);
+        }
+
+        // === 2. \u89c6\u9891\u64ad\u653e\u4f18\u5316 ===
+        try {
+            // \u542f\u7528\u5a92\u4f53\u64ad\u653e
+            System.setProperty("com.sun.webkit.useHTTP2Loader", "true");
+
+            // \u542f\u7528\u786c\u4ef6\u52a0\u901f\uff08\u5982\u679c\u7cfb\u7edf\u652f\u6301\uff09
+            System.setProperty("prism.order", "d3d,sw"); // Windows\u4f18\u5148\u4f7f\u7528DirectX
+            System.setProperty("prism.vsync", "true");
+
+            // \u5a92\u4f53\u7f13\u51b2\u4f18\u5316
+            System.setProperty("http.maxConnections", "10");
+
+        } catch (Exception e) {
+            Logger.error("\u914d\u7f6e\u5a92\u4f53\u64ad\u653e\u5931\u8d25", e);
+        }
+
+        // === 3. \u5b57\u4f53\u4fee\u590d\uff08\u4fdd\u7559\u539f\u6709\u529f\u80fd\uff09===
         try {
             String css = "* { " +
                         "font-family: 'Microsoft YaHei', 'PingFang SC', 'Segoe UI', 'Tahoma', 'Hiragino Sans GB', 'Arial', sans-serif !important; " +
@@ -33,16 +71,6 @@ public class BrowserEngine {
         } catch (Exception e) {
             Logger.error("\u8bbe\u7f6e\u9ed8\u8ba4\u6837\u5f0f\u8868\u5931\u8d25", e);
         }
-
-        // \u914d\u7f6e\u6570\u636e\u76ee\u5f55\u4ee5\u5b9e\u73b0\u767b\u5f55持久化 (Cookies, LocalStorage)
-        java.io.File dataDir = new java.io.File(System.getProperty("user.home"), ".smartbrowser/webview");
-        if (!dataDir.exists()) {
-            dataDir.mkdirs();
-        }
-        this.webEngine.setUserDataDirectory(dataDir);
-
-        // \u8bbe\u7f6e现代 User-Agent \u4ee5\u63d0\u9ad8兼容性
-        this.webEngine.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36");
 
         initListeners();
     }
@@ -62,6 +90,8 @@ public class BrowserEngine {
                 Logger.info("\u9875\u9762\u52a0\u8f7d\u6210\u529f: " + webEngine.getLocation());
                 injectFontFixScript();
                 injectAdBlockScript();  // \u65b0\u589e\uff1a\u6ce8\u5165\u5e7f\u544a\u62e6\u622a\u811a\u6722
+                injectFullscreenFix();  // \u65b0\u589e\uff1a\u4fee\u590d\u5168\u5c4f\u652f\u6301
+                injectVideoFix();       // \u65b0\u589e\uff1a\u4f18\u5316\u89c6\u9891\u64ad\u653e
             } else if (newState == Worker.State.FAILED) {
                 Logger.error("\u9875\u9762\u52a0\u8f7d\u5931\u8d25: " + webEngine.getLocation());
             }
@@ -361,6 +391,113 @@ public class BrowserEngine {
 
         executeScript(js);
         Logger.info("\u5df2\u6ce8\u5165\u5e7f\u544a\u62e6\u622a\u811a\u6722");
+    }
+
+    /**
+     * \u6ce8\u5165\u5168\u5c4fAPI\u4fee\u590d\u811a\u6722
+     */
+    private void injectFullscreenFix() {
+        String js = "(function() {" +
+            "console.log('[SmartBrowser] \u6b63\u5728\u4fee\u590d\u5168\u5c4fAPI...');" +
+
+            // \u68c0\u6d4b\u5e76polyfill\u5168\u5c4fAPI
+            "if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled) {" +
+            "  console.log('[SmartBrowser] \u6d4f\u89c8\u5668\u4e0d\u652f\u6301\u539f\u751f\u5168\u5c4f\uff0c\u542f\u7528\u6a21\u62df\u5168\u5c4f');" +
+            "  " +
+            "  // \u521b\u5efa\u6a21\u62df\u5168\u5c4f\u51fd\u6570" +
+            "  Element.prototype.requestFullscreen = Element.prototype.requestFullscreen ||" +
+            "  Element.prototype.webkitRequestFullscreen ||" +
+            "  Element.prototype.mozRequestFullScreen ||" +
+            "  Element.prototype.msRequestFullscreen ||" +
+            "  function() {" +
+            "    var elem = this;" +
+            "    elem.style.position = 'fixed';" +
+            "    elem.style.top = '0';" +
+            "    elem.style.left = '0';" +
+            "    elem.style.width = '100%';" +
+            "    elem.style.height = '100%';" +
+            "    elem.style.zIndex = '999999';" +
+            "    elem.style.backgroundColor = '#000';" +
+            "    elem.setAttribute('data-fake-fullscreen', 'true');" +
+            "    console.log('[SmartBrowser] \u5df2\u542f\u7528\u6a21\u62df\u5168\u5c4f');" +
+            "    " +
+            "    // \u522b\u540d退出全屏的处理（这里可以通过监听 ESC 键实现，或者提供一个 JS 桥接）" +
+            "    var exitHandler = function(e) {" +
+            "      if (e.key === 'Escape' || e.keyCode === 27) {" +
+            "        if (elem.getAttribute('data-fake-fullscreen')) {" +
+            "          elem.style.position = '';" +
+            "          elem.style.top = '';" +
+            "          elem.style.left = '';" +
+            "          elem.style.width = '';" +
+            "          elem.style.height = '';" +
+            "          elem.style.zIndex = '';" +
+            "          elem.style.backgroundColor = '';" +
+            "          elem.removeAttribute('data-fake-fullscreen');" +
+            "          document.removeEventListener('keydown', exitHandler);" +
+            "          console.log('[SmartBrowser] \u5df2\u9000\u51fa\u6a21\u62df\u5168\u5c4f');" +
+            "        }" +
+            "      }" +
+            "    };" +
+            "    document.addEventListener('keydown', exitHandler);" +
+            "    return Promise.resolve();" +
+            "  };" +
+            "  " +
+            "  // \u6807\u8bb0\u4e3a\u652f\u6301\u5168\u5c4f" +
+            "  Object.defineProperty(document, 'fullscreenEnabled', {" +
+            "    get: function() { return true; }" +
+            "  });" +
+            "}" +
+
+            "console.log('[SmartBrowser] \u5168\u5c4fAPI\u4fee\u590d\u5b8c\u6210');" +
+            "})();";
+
+        executeScript(js);
+    }
+
+    /**
+     * \u6ce8\u5165\u89c6\u9891\u64ad\u653e\u4f18\u5316\u811a\u6722
+     */
+    private void injectVideoFix() {
+        String js = "(function() {" +
+            "console.log('[SmartBrowser] \u6b63\u5728\u4f18\u5316\u89c6\u9891\u64ad\u653e...');" +
+
+            // \u67e5\u627e\u6240\u6709\u89c6\u9891\u5143\u7d20" +
+            "var videos = document.querySelectorAll('video');" +
+            "videos.forEach(function(video) {" +
+            "  // \u542f\u7528\u786c\u4ef6\u52a0\u901f\u63d0\u793a" +
+            "  video.setAttribute('playsinline', 'true');" +
+            "  " +
+            "  // \u4f18\u5316\u7f13\u51b2" +
+            "  video.preload = 'auto';" +
+            "  " +
+            "  // \u5f3a\u5236WebM/MP4\u683c\u5f0f\uff08\u66f4\u597d\u7684\u517c\u5bb9\u6027\uff09" +
+            "  var canPlayMP4 = video.canPlayType('video/mp4');" +
+            "  var canPlayWebM = video.canPlayType('video/webm');" +
+            "  console.log('[SmartBrowser] \u89c6\u9891\u683c\u5f0f\u652f\u6301 - MP4:', canPlayMP4, 'WebM:', canPlayWebM);" +
+            "});" +
+
+            // \u76d1\u63a7\u65b0\u6dfb\u52a0\u7684\u89c6\u9891\u5143\u7d20" +
+            "var videoObserver = new MutationObserver(function(mutations) {" +
+            "  mutations.forEach(function(mutation) {" +
+            "    mutation.addedNodes.forEach(function(node) {" +
+            "      if (node.tagName === 'VIDEO') {" +
+            "        node.setAttribute('playsinline', 'true');" +
+            "        node.preload = 'auto';" +
+            "        console.log('[SmartBrowser] \u68c0\u6d4b\u5230\u65b0\u89c6\u9891\u5143\u7d20\uff0c\u5df2\u4f18\u5316');" +
+            "      }" +
+            "    });" +
+            "  });" +
+            "});" +
+
+            "videoObserver.observe(document.documentElement, {" +
+            "  childList: true," +
+            "  subtree: true" +
+            "});" +
+
+            "console.log('[SmartBrowser] \u89c6\u9891\u4f18\u5316\u5b8c\u6210\uff0c\u6b63\u5728\u76d1\u63a7\u65b0\u89c6\u9891\u5143\u7d20');" +
+            "})();";
+
+        executeScript(js);
     }
 
     public WebView getWebView() {

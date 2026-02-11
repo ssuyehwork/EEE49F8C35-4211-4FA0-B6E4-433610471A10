@@ -64,7 +64,7 @@ public class MainWindow {
 
             // \u5b89\u5168\u52a0\u8f7d\u6837\u5f0f\u8868
             loadStyleSheet(scene, "/styles/main.css");
-            loadStyleSheet(scene, "/styles/light-theme.css");
+            loadStyleSheet(scene, "/styles/dark-theme.css");
 
             stage.setScene(scene);
             stage.setTitle("SmartBrowser");
