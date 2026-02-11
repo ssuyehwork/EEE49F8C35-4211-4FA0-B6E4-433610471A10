@@ -40,14 +40,14 @@ public class MainWindow {
     private void initUI() {
         try {
             BorderPane root = new BorderPane();
-            // \u8bbe\u7f6e\u4e00\u4e2a\u6de1\u7070\u8272\u80cc\u666f\uff0c\u9632\u6b62\u5168\u767d\u5bfc\u81f4\u770b\u4e0d\u51fa\u8fb9\u754c
-            root.setStyle("-fx-background-color: #f5f5f5;");
+            // \u8bbe\u7f6e深色\u80cc\u666f
+            root.setStyle("-fx-background-color: #1e1e1e;");
 
             // \u9876\u90e8\uff1a\u5bfc\u822a\u680f + \u5730\u5740\u680f
             this.topContainer = new VBox();
             topContainer.setSpacing(2);
-            // \u7ed9\u9876\u90e8\u5bb9\u5668\u8bbe\u7f6e\u80cc\u666f\u8272\u548c\u9634\u5f71\u6548\u679c\uff08\u8c03\u8bd5\u7528\uff09
-            topContainer.setStyle("-fx-background-color: #ffffff; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);");
+            // \u7ed9\u9876\u90e8\u5bb9\u5668\u8bbe\u7f6e深色\u80cc\u666f\u548c相应阴影
+            topContainer.setStyle("-fx-background-color: #2b2b2b; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);");
             topContainer.getChildren().addAll(navBar, addressBar);
             root.setTop(topContainer);
 

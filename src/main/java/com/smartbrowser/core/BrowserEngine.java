@@ -36,9 +36,8 @@ public class BrowserEngine {
             // \u542f\u7528JavaScript\uff08\u5fc5\u987b\uff0c\u5426\u5219\u5f88\u591a\u7f51\u7ad9\u529f\u80fd\u4e0d\u53ef\u7528\uff09
             this.webEngine.setJavaScriptEnabled(true);
 
-            // \u8bbe\u7f6eUser-Agent\uff08\u6a21\u62df\u73b0\u4ee3\u6d4f\u89c8\u5668\uff0c\u907f\u514d\u7f51\u7ad9\u964d\u7ea7\uff09
-            String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
-                              "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+            // \u8bbe\u7f6eUser-Agent\uff08\u4f7f\u7528 Firefox UA \u5c1d\u8bd5\u7ed5\u8fc7 Google \u767b\u5f55安全\u68c0\u6d4b\uff09
+            String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0";
             this.webEngine.setUserAgent(userAgent);
 
         } catch (Exception e) {
