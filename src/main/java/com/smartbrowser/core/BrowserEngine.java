@@ -1,9 +1,6 @@
 package com.smartbrowser.core;
 
-import com.smartbrowser.adblocker.AdBlocker;
-import com.smartbrowser.utils.JsonUtils;
 import com.smartbrowser.utils.Logger;
-import com.smartbrowser.utils.URLUtils;
 import javafx.concurrent.Worker;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -55,7 +52,7 @@ public class BrowserEngine {
             if (newState == Worker.State.SUCCEEDED) {
                 Logger.info("\u9875\u9762\u52a0\u8f7d\u6210\u529f: " + webEngine.getLocation());
                 injectFontFixScript();
-                injectAdBlockCSS(); // \u6ce8\u5165广告拦截 CSS \u89c4\u5219
+                injectAdBlockScript();  // \u65b0\u589e\uff1a\u6ce8\u5165\u5e7f\u544a\u62e6\u622a\u811a\u6722
             } else if (newState == Worker.State.FAILED) {
                 Logger.error("\u9875\u9762\u52a0\u8f7d\u5931\u8d25: " + webEngine.getLocation());
             }
@@ -82,11 +79,6 @@ public class BrowserEngine {
     }
 
     public void navigate(String url) {
-        // \u96c6\u6210\u5e7f\u544a\u62e6\u622a\u903b\u8f91
-        if (AdBlocker.getInstance().shouldBlock(url, getURL())) {
-            Logger.warn("\u5bfc\u822a\u88ab\u62e6\u622a (\u5e7f\u544a): " + url);
-            return;
-        }
         Logger.info("\u5bfc\u822a\u5230: " + url);
         webEngine.load(url);
     }
@@ -136,29 +128,6 @@ public class BrowserEngine {
         }
     }
 
-    /**
-     * \u6ce8\u5165广告拦截 CSS \u89c4\u5219\uff0c\u9690\u85cf广告元素
-     */
-    private void injectAdBlockCSS() {
-        String domain = URLUtils.extractDomain(getURL());
-        List<String> selectors = AdBlocker.getInstance().getCSSRules(domain);
-
-        if (selectors != null && !selectors.isEmpty()) {
-            StringBuilder cssBuilder = new StringBuilder();
-            for (String selector : selectors) {
-                cssBuilder.append(selector).append(" { display: none !important; }\n");
-            }
-
-            String js = "(function() {" +
-                    "  const style = document.createElement('style');" +
-                    "  style.id = 'sb-adblock-css';" +
-                    "  style.textContent = " + JsonUtils.toJson(cssBuilder.toString()) + ";" +
-                    "  document.head.appendChild(style);" +
-                    "})();";
-            executeScript(js);
-            Logger.info("\u5df2\u4e3a域名 " + domain + " \u6ce8\u5165 " + selectors.size() + " \u6761广告隐藏规则");
-        }
-    }
 
     /**
      * \u6ce8\u5165\u5f3a\u529b\u5b57\u4f53\u4fee\u590d\u811a\u6722\uff0c\u652f\u6301\u7a3f\u900f Shadow DOM \u548c动态加载元素
@@ -204,6 +173,158 @@ public class BrowserEngine {
 
     public void setUserAgent(String ua) {
         webEngine.setUserAgent(ua);
+    }
+
+    /**
+     * \u6ce8\u5165\u5e7f\u544a\u62e6\u622a\u811a\u6722 - \u62e6\u622a\u5e38\u89c1\u5e7f\u544a\u57df\u540d\u548c\u9690\u85cf\u5e7f\u544a\u5143\u7d20
+     */
+    private void injectAdBlockScript() {
+        String js = "(function() {" +
+            "console.log('[SmartBrowser] \u5e7f\u544a\u62e6\u622a\u5df2\u542f\u7528');" +
+
+            // === \u7b2c\u4e00\u90e8\u5206\uff1a\u62e6\u622a\u5e7f\u544a\u57df\u540d\u8bf7\u6c42 ===
+            "var blockedDomains = [" +
+            "  'doubleclick.net'," +
+            "  'googlesyndication.com'," +
+            "  'googleadservices.com'," +
+            "  'adservice.google.com'," +
+            "  'google-analytics.com'," +
+            "  'googletagmanager.com'," +
+            "  'scorecardresearch.com'," +
+            "  'criteo.com'," +
+            "  'outbrain.com'," +
+            "  'taboola.com'," +
+            "  'media.net'," +
+            "  '2mdn.net'," +
+            "  'pos.baidu.com'," +
+            "  'cpro.baidu.com'," +
+            "  'cbjs.baidu.com'," +
+            "  'baidustatic.com/aoyou'," +
+            "  'tanx.com'," +
+            "  'alimama.cn'," +
+            "  'mmstat.com'," +
+            "  'cnzz.com'," +
+            "  '51.la'" +
+            "];" +
+
+            "var blockedPatterns = [" +
+            "  /\\/ads?\\//" + "," +
+            "  /\\/ad\\d+\\// ," +
+            "  /\\/banner\\// ," +
+            "  /\\/adv\\// ," +
+            "  /\\/advertising\\// ," +
+            "  /\\/_ads\\// ," +
+            "  /\\/ad\\.js/ ," +
+            "  /\\/ads\\.js/ ," +
+            "  /\\/adframe\\./," +
+            "  /\\/adserver\\./," +
+            "  /analytics/," +
+            "  /tracking/" +
+            "];" +
+
+            "function shouldBlockURL(url) {" +
+            "  if (!url) return false;" +
+            "  var urlLower = url.toLowerCase();" +
+            "  " +
+            "  for (var i = 0; i < blockedDomains.length; i++) {" +
+            "    if (urlLower.indexOf(blockedDomains[i]) !== -1) {" +
+            "      console.log('[AdBlock] \u5df2\u62e6\u622a\u57df\u540d:', url);" +
+            "      return true;" +
+            "    }" +
+            "  }" +
+            "  " +
+            "  for (var i = 0; i < blockedPatterns.length; i++) {" +
+            "    if (blockedPatterns[i].test(urlLower)) {" +
+            "      console.log('[AdBlock] \u5df2\u62e6\u622a\u8def\u5f84:', url);" +
+            "      return true;" +
+            "    }" +
+            "  }" +
+            "  " +
+            "  return false;" +
+            "}" +
+
+            // \u62e6\u622a fetch \u8bf7\u6c42
+            "var originalFetch = window.fetch;" +
+            "window.fetch = function(url, options) {" +
+            "  var urlStr = url.toString ? url.toString() : url;" +
+            "  if (shouldBlockURL(urlStr)) {" +
+            "    return Promise.reject(new Error('Blocked by AdBlocker'));" +
+            "  }" +
+            "  return originalFetch.apply(this, arguments);" +
+            "};" +
+
+            // \u62e6\u622a XMLHttpRequest
+            "var originalOpen = XMLHttpRequest.prototype.open;" +
+            "XMLHttpRequest.prototype.open = function(method, url) {" +
+            "  if (shouldBlockURL(url)) {" +
+            "    throw new Error('Blocked by AdBlocker');" +
+            "  }" +
+            "  return originalOpen.apply(this, arguments);" +
+            "};" +
+
+            // === \u7b2c\u4e8c\u90e8\u5206\uff1a\u9690\u85cf\u5e7f\u544a\u5143\u7d20\uff08CSS\uff09 ===
+            "var adBlockCSS = '" +
+            "  .ad, .ads, .ad-banner, .ad-box, .ad-container," +
+            "  .advertisement, .advertising, .adv, .adsense," +
+            "  [class*=\"google-ad\"], [id*=\"google-ad\"]," +
+            "  [class^=\"ad-\"], [id^=\"ad-\"]," +
+            "  [class*=\"-ad-\"], [id*=\"-ad-\"]," +
+            "  [class$=\"-ad\"], [id$=\"-ad\"]," +
+            "  .sponsored, .sponsor," +
+            "  iframe[src*=\"ads\"], iframe[src*=\"doubleclick\"]," +
+            "  iframe[src*=\"googleads\"], iframe[src*=\"googlesyndication\"]," +
+            "  .gg, .guanggao," +  // \u4e2d\u6587\u7f51\u7ad9
+            "  [class*=\"guanggao\"], [id*=\"guanggao\"]" +
+            "  { display: none !important; visibility: hidden !important; }" +
+            "';" +
+
+            "var style = document.createElement('style');" +
+            "style.id = 'smartbrowser-adblock';" +
+            "style.textContent = adBlockCSS;" +
+            "if (!document.getElementById('smartbrowser-adblock')) {" +
+            "  document.head.appendChild(style);" +
+            "}" +
+
+            // === \u7b2c\u4e09\u90e8\u5206\uff1a\u52a8\u6001\u76d1\u63a7\u65b0\u589e\u5e7f\u544a\u5143\u7d20 ===
+            "var observer = new MutationObserver(function(mutations) {" +
+            "  mutations.forEach(function(mutation) {" +
+            "    mutation.addedNodes.forEach(function(node) {" +
+            "      if (node.nodeType === 1) {" +  // Element\u8282\u70b9
+            "        var className = node.className || '';" +
+            "        var id = node.id || '';" +
+            "        var tag = node.tagName ? node.tagName.toLowerCase() : '';" +
+            "        " +
+            "        if (tag === 'iframe' || tag === 'script') {" +
+            "          var src = node.src || '';" +
+            "          if (shouldBlockURL(src)) {" +
+            "            console.log('[AdBlock] \u5df2\u79fb\u9664\u5e7f\u544a\u5143\u7d20:', tag, src);" +
+            "            node.remove();" +
+            "            return;" +
+            "          }" +
+            "        }" +
+            "        " +
+            "        if (className.match(/\\b(ad|ads|advertisement|adsense|google-ad|guanggao)\\b/i) ||" +
+            "            id.match(/\\b(ad|ads|advertisement|adsense|google-ad|guanggao)\\b/i)) {" +
+            "          console.log('[AdBlock] \u5df2\u9690\u85cf\u5e7f\u544a\u5143\u7d20:', className, id);" +
+            "          node.style.display = 'none';" +
+            "          node.style.visibility = 'hidden';" +
+            "        }" +
+            "      }" +
+            "    });" +
+            "  });" +
+            "});" +
+
+            "observer.observe(document.documentElement, {" +
+            "  childList: true," +
+            "  subtree: true" +
+            "});" +
+
+            "console.log('[SmartBrowser] \u5e7f\u544a\u62e6\u622a\u811a\u6722\u5df2\u6fc0\u6d3b - \u6b63\u5728\u76d1\u63a7\u9875\u9762');" +
+
+            "})();";
+
+        executeScript(js);
+        Logger.info("\u5df2\u6ce8\u5165\u5e7f\u544a\u62e6\u622a\u811a\u6722");
     }
 
     public WebView getWebView() {
